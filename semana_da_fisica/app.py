@@ -2,7 +2,13 @@ from http import HTTPStatus
 
 from fastapi import FastAPI, HTTPException
 
-from semana_da_fisica.schemas import Message, UserDB, UserList, UserPublic, UserSchema
+from semana_da_fisica.schemas import (
+    Message,
+    UserDB,
+    UserList,
+    UserPublic,
+    UserSchema,
+)
 
 app = FastAPI()
 database = []
@@ -21,9 +27,10 @@ def create_user(user: UserSchema):
     return user_with_id
 
 
-@app.get('/users/', response_model = UserList)
+@app.get('/users/', response_model=UserList)
 def read_users():
     return {'users': database}
+
 
 @app.put('/usrs/{user_id}', response_model=UserPublic)
 def update_user(user_id: int, user: UserSchema):
@@ -32,15 +39,13 @@ def update_user(user_id: int, user: UserSchema):
 
     return user_with_id
 
+
 @app.delete('/users/{user_id}', response_model=Message)
 def delete_user(user_id: int):
-    if user_id <1 or user_id > len(database):
+    if user_id < 1 or user_id > len(database):
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail='Usuário não encontrado'
+            status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
         )
-
-    
     del database[user_id - 1]
 
     return {'message': 'Usuário deletado com sucesso'}

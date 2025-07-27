@@ -20,5 +20,6 @@ class UserPublic(BaseModel):
     username: str
     email: EmailStr
 
+
 class UserList(BaseModel):
     users: list[UserPublic]
