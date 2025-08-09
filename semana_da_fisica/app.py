@@ -12,6 +12,7 @@ from semana_da_fisica.schemas import (
     UserPublic,
     UserSchema,
 )
+from semana_da_fisica.security import get_password_hash
 
 app = FastAPI()
 
@@ -40,7 +41,9 @@ def create_user(user: UserSchema, session=Depends(get_session)):
             )
 
     db_user = User(
-        username=user.username, password=user.password, email=user.email
+        username=user.username,
+        password=get_password_hash(user.password),
+        email=user.email,
     )
     session.add(db_user)
     session.commit()
@@ -64,7 +67,7 @@ def update_user(user_id: int, user: UserSchema, session=Depends(get_session)):
     try:
         user_db.email = user.email
         user_db.username = user.username
-        user_db.password = user.password
+        user_db.password = get_password_hash(user.password)
 
         session.add(user_db)
         session.commit()
